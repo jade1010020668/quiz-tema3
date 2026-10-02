@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pantalla · Quiz · Tema 3 Umbrales</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="theme-dark page-screen">
+  <!-- Acceso -->
+  <div id="view-login" class="s-wrap" style="justify-content:center;align-items:center" hidden>
+    <form id="login-form" class="card" style="width:min(420px,92vw);display:grid;gap:12px">
+      <h2>Pantalla de proyección</h2>
+      <p class="secondary">Escribe el código de acceso del supervisor.</p>
+      <input class="input" id="login-code" type="password" placeholder="Código de acceso" autocomplete="off" />
+      <button class="btn btn-primary btn-big" type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <div id="view-main" class="s-wrap" hidden>
+    <header class="s-header">
+      <img class="masthead-screen" data-brand="banner" src="" hidden alt="" />
+      <span class="live">
+        <span><span class="dotlive"></span>En vivo</span>
+        <span class="num" id="hdr-connected"></span>
+      </span>
+    </header>
+
+    <main class="s-main">
+      <!-- Portada / QR -->
+      <section id="s-lobby" class="s-lobby" hidden>
+        <div class="qr-box">
+          <img id="qr-img" src="/api/qr.svg" alt="Código QR para ingresar" />
+          <div class="url" id="qr-url"></div>
+        </div>
+        <div style="display:grid;gap:18px;align-content:start">
+          <div>
+            <p class="eyebrow" data-brand="entidad">Manejo Integrado de Plagas</p>
+            <p class="s-sub" style="font-size:1.2rem;font-weight:700;color:var(--ink-1);margin-top:4px" data-brand="actividad">Clase 2 · Tema 3 · UDE y NDE</p>
+            <p class="lema" data-brand="lema"></p>
+          </div>
+          <h2 class="s-title" style="font-size:clamp(1.5rem,3vw,2.3rem)">Escanea el código y entra con tu nombre</h2>
+          <p class="s-sub">Cada pregunta tiene <strong>3 minutos</strong>; responde rápido y bien para sumar más puntos.</p>
+          <div>
+            <span class="bignum num" id="lobby-count">0</span>
+            <span class="s-sub"> participantes conectados</span>
+          </div>
+          <div class="chips" id="lobby-chips"></div>
+        </div>
+      </section>
+
+      <!-- Pregunta activa -->
+      <section id="s-question" class="s-question" hidden style="display:grid;gap:18px">
+        <div class="s-qhead">
+          <h2 class="s-title" id="sq-number"></h2>
+          <div style="display:grid;justify-items:end;gap:6px">
+            <span class="countdown num" id="sq-clock" style="font-size:2.2rem">3:00</span>
+            <span class="secondary num" id="sq-answered"></span>
+          </div>
+        </div>
+        <div class="timerbar" id="sq-bar"><div></div></div>
+        <h1 class="s-title" id="sq-text"></h1>
+        <div class="options" id="sq-options"></div>
+      </section>
+
+      <!-- Resultados de la pregunta -->
+      <section id="s-qranking" hidden style="display:grid;gap:18px">
+        <div>
+          <h2 class="s-title" id="qr-title"></h2>
+          <p class="s-sub" id="qr-correct"></p>
+          <p class="s-sustento" id="qr-sustento" hidden></p>
+        </div>
+        <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:start" id="qr-grid">
+          <div style="display:grid;gap:16px">
+            <div class="dist" id="qr-dist"></div>
+            <div class="facesummary" id="qr-faces"></div>
+          </div>
+          <div>
+            <h3 class="s-sub" style="margin-bottom:8px">Los más rápidos y precisos</h3>
+            <div class="ranklist" id="qr-top"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Acumulado -->
+      <section id="s-accumulated" class="s-accumulated" hidden style="display:grid;gap:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap">
+          <h2 class="s-title">Tabla general</h2>
+          <span class="s-sub num" id="acc-sub"></span>
+        </div>
+        <div class="ranklist" id="acc-list"></div>
+      </section>
+
+      <!-- Sorteo -->
+      <section id="s-sorteo" class="s-sorteo" hidden>
+        <h2 class="s-title" id="sorteo-head">🎲 Sorteo</h2>
+        <p class="s-sub" id="sorteo-group" style="margin:0"></p>
+        <div class="sorteo-name" id="sorteo-name">…</div>
+        <div class="sorteo-detail card" id="sorteo-detail" hidden></div>
+      </section>
+
+      <!-- Resumen general -->
+      <section id="s-resumen" hidden style="display:grid;gap:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap">
+          <h2 class="s-title">Resumen general</h2>
+          <span class="s-sub num" id="res-sub"></span>
+        </div>
+        <div class="resumen-stats" id="res-stats"></div>
+        <div class="ranklist" id="res-ranking"></div>
+      </section>
+    </main>
+
+    <footer class="s-footer" data-brand="despacho">Clase 2 · Umbrales y Muestreo</footer>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/screen.js"></script>
+</body>
+</html>

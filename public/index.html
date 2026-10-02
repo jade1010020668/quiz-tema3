@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Quiz · Tema 3 Umbrales</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="page-participant">
+  <div class="p-wrap">
+    <header class="p-header">
+      <img class="masthead" data-brand="banner" src="" hidden alt="" />
+      <span class="mename" id="me-name"></span>
+    </header>
+
+    <!-- Registro -->
+    <section id="view-join" class="card" hidden>
+      <h2>¡Bienvenido(a)!</h2>
+      <p class="secondary">Escribe tu <strong>nombre y apellidos completos</strong> para presentar el examen. Con ese nombre quedará registrada tu participación.</p>
+      <form id="join-form" style="display:grid;gap:8px;margin-top:12px">
+        <input class="input" id="join-name" maxlength="60" placeholder="Ej.: María Fernanda Gómez Ruiz" autocomplete="name" required />
+        <p class="muted" id="join-hint" style="margin:0;font-size:0.82rem">Debe incluir al menos un nombre y un apellido.</p>
+        <button class="btn btn-primary btn-big" type="submit" style="margin-top:4px">Ingresar</button>
+      </form>
+    </section>
+
+    <!-- Sala de espera -->
+    <section id="view-lobby" class="card" hidden style="text-align:center;padding:34px 20px">
+      <div style="font-size:3rem">🕒</div>
+      <h2 id="lobby-title">Ya estás dentro</h2>
+      <p class="secondary" id="lobby-sub">Espera a que el supervisor active la siguiente pregunta.</p>
+      <p class="muted num" id="lobby-count"></p>
+    </section>
+
+    <!-- Pregunta activa -->
+    <section id="view-question" hidden style="display:grid;gap:12px">
+      <div class="card" style="display:grid;gap:10px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+          <strong id="q-number"></strong>
+          <span class="countdown" id="q-clock">3:00</span>
+        </div>
+        <div class="timerbar" id="q-bar"><div></div></div>
+        <h2 id="q-text" style="font-size:1.2rem"></h2>
+      </div>
+      <div class="options" id="q-options"></div>
+    </section>
+
+    <!-- Ya respondió / esperando cierre -->
+    <section id="view-answered" class="card result-card" hidden>
+      <div class="face-hero" id="ans-face">✅</div>
+      <div class="verdict" id="ans-verdict">Respuesta enviada</div>
+      <div class="points" id="ans-points"></div>
+      <p class="muted" id="ans-note">Esperando a que termine la pregunta…</p>
+    </section>
+
+    <!-- Resultado con ranking -->
+    <section id="view-result" hidden style="display:grid;gap:12px">
+      <div class="card result-card">
+        <div class="face-hero" id="res-face"></div>
+        <div class="verdict" id="res-verdict"></div>
+        <div class="points" id="res-points"></div>
+        <p class="secondary" id="res-correct"></p>
+        <div style="margin-top:14px" id="res-standing"></div>
+      </div>
+      <div class="card" id="res-topcard">
+        <h3 style="font-size:1rem">Los primeros lugares</h3>
+        <div class="ranklist" id="res-top"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/participant.js"></script>
+</body>
+</html>

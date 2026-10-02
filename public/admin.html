@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Supervisor · Quiz · Tema 3 Umbrales</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="page-admin">
+  <!-- Acceso -->
+  <div id="view-login" class="a-wrap" style="max-width:460px;padding-top:12vh" hidden>
+    <form id="login-form" class="card" style="display:grid;gap:12px">
+      <h2>Panel del supervisor</h2>
+      <p class="secondary">Ingresa el código de acceso para dirigir la sesión.</p>
+      <input class="input" id="login-code" type="password" placeholder="Código de acceso" autocomplete="off" />
+      <button class="btn btn-primary btn-big" type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <div id="view-main" class="a-wrap" hidden>
+    <header style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div class="brandline">
+        <img class="masthead-sm" data-brand="banner" src="" hidden alt="" />
+        <span class="admin-tag">Supervisor</span>
+      </div>
+      <span class="secondary">Pantalla: <a href="/pantalla" target="_blank">/pantalla</a> · Participantes: <a href="/" target="_blank" id="join-link">/</a></span>
+    </header>
+
+    <!-- Estado -->
+    <section class="card a-statusbar">
+      <div class="stat"><span class="v" id="st-phase">—</span><span class="k">Estado</span></div>
+      <div class="stat"><span class="v num" id="st-connected">0</span><span class="k">Conectados</span></div>
+      <div class="stat"><span class="v num" id="st-registered">0</span><span class="k">Registrados</span></div>
+      <div class="stat"><span class="v num" id="st-answered">—</span><span class="k">Respuestas</span></div>
+      <div class="stat"><span class="v num" id="st-clock">—</span><span class="k">Tiempo restante</span></div>
+      <div class="stat" style="flex:1;min-width:180px">
+        <div class="timerbar" id="st-bar"><div></div></div>
+      </div>
+    </section>
+
+    <!-- Enlaces y QR de las tres vistas -->
+    <section class="card" style="display:grid;gap:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <h3 style="font-size:1rem;margin:0">Enlaces y códigos QR</h3>
+        <span class="muted" style="font-size:0.8rem">Ábrelos desde el WiFi del salón para que los QR funcionen en los celulares.</span>
+      </div>
+      <div class="a-links">
+        <div class="linkcard">
+          <div class="linkhead">📱 Participantes</div>
+          <img class="qrimg" src="/api/qr.svg?to=participant" alt="QR para participantes" />
+          <a class="linkurl" id="url-participant" href="/" target="_blank" rel="noopener">—</a>
+          <button class="btn btn-copy" data-copy="url-participant" type="button">Copiar enlace</button>
+        </div>
+        <div class="linkcard">
+          <div class="linkhead">🖥️ Pantalla</div>
+          <img class="qrimg" src="/api/qr.svg?to=pantalla" alt="QR para la pantalla proyectada" />
+          <a class="linkurl" id="url-pantalla" href="/pantalla" target="_blank" rel="noopener">—</a>
+          <button class="btn btn-copy" data-copy="url-pantalla" type="button">Copiar enlace</button>
+        </div>
+        <div class="linkcard">
+          <div class="linkhead">🎛️ Supervisor</div>
+          <img class="qrimg" src="/api/qr.svg?to=admin" alt="QR para el panel del supervisor" />
+          <a class="linkurl" id="url-admin" href="/admin" target="_blank" rel="noopener">—</a>
+          <button class="btn btn-copy" data-copy="url-admin" type="button">Copiar enlace</button>
+        </div>
+      </div>
+      <p class="muted" style="margin:0;font-size:0.8rem">La Pantalla y el Supervisor pedirán el código de acceso al abrirse.</p>
+    </section>
+
+    <!-- Controles -->
+    <section class="card" style="display:grid;gap:12px">
+      <h3 style="font-size:1rem;margin:0">Controles de la sesión</h3>
+      <div class="a-controls">
+        <button class="btn btn-primary" id="btn-next">▶ Activar siguiente pregunta</button>
+        <button class="btn btn-danger" id="btn-close">⏹ Cerrar pregunta ahora</button>
+      </div>
+      <h3 style="font-size:0.9rem;margin:6px 0 0" class="muted">Qué se muestra en la pantalla proyectada</h3>
+      <div class="a-controls">
+        <button class="btn" data-screen="lobby">🔳 Portada y QR</button>
+        <button class="btn" data-screen="question_ranking">📊 Resultados de la pregunta</button>
+        <button class="btn" data-screen="accumulated">🏆 Tabla general</button>
+        <button class="btn" data-screen="resumen">📋 Resumen general</button>
+        <button class="btn" id="btn-sorteo">🎲 Sorteo aleatorio</button>
+      </div>
+      <h3 style="font-size:0.9rem;margin:6px 0 0" class="muted">Respaldo de resultados</h3>
+      <div class="a-controls">
+        <button class="btn" id="btn-csv-resumen">⬇ Descargar marcador</button>
+        <button class="btn" id="btn-csv-detalle">⬇ Descargar detalle por pregunta</button>
+      </div>
+      <p class="muted" style="margin:0;font-size:0.8rem">
+        <strong>Descárgalos antes de cerrar la jornada.</strong> El servicio borra la sesión
+        cuando se reinicia o se duerme por inactividad, y los resultados no se recuperan.
+      </p>
+      <div class="a-controls" style="border-top:1px solid var(--grid);padding-top:12px">
+        <button class="btn btn-danger" id="btn-reset">🗑 Reiniciar sesión (borra participantes y puntajes)</button>
+      </div>
+    </section>
+
+    <div class="a-grid">
+      <!-- Preguntas -->
+      <section class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <h3 style="font-size:1rem;margin:0">Preguntas</h3>
+          <button class="btn" id="btn-addq">＋ Nueva pregunta</button>
+        </div>
+        <div id="qlist" style="margin-top:12px"></div>
+      </section>
+
+      <!-- Participantes -->
+      <section class="card">
+        <h3 style="font-size:1rem;margin:0 0 10px">Participantes</h3>
+        <div style="max-height:520px;overflow:auto">
+          <table class="ptable">
+            <thead>
+              <tr><th class="num">#</th><th>Nombre</th><th></th><th class="num">Puntos</th><th></th></tr>
+            </thead>
+            <tbody id="plist"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Editor de pregunta -->
+  <div class="modal-back" id="qmodal" hidden>
+    <form class="card modal" id="qform">
+      <h3 id="qform-title">Nueva pregunta</h3>
+      <label>
+        <span class="secondary">Enunciado</span>
+        <textarea class="input" id="qf-text" rows="3" required></textarea>
+      </label>
+      <div id="qf-options" style="display:grid;gap:8px"></div>
+      <div class="a-controls">
+        <button class="btn" type="button" id="qf-addopt">＋ Agregar opción</button>
+      </div>
+      <label>
+        <span class="secondary">Tiempo (segundos)</span>
+        <input class="input" id="qf-time" type="number" min="10" max="600" value="180" />
+      </label>
+      <label>
+        <span class="secondary">Sustento normativo <span class="muted">(se muestra en la pantalla al cerrar la pregunta)</span></span>
+        <textarea class="input" id="qf-sustento" rows="2"></textarea>
+      </label>
+      <p class="muted" style="margin:0">Marca con el círculo la opción correcta.</p>
+      <div class="a-controls" style="justify-content:flex-end">
+        <button class="btn" type="button" id="qf-cancel">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Guardar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Detalle de una pregunta jugada: quién respondió bien y quién mal -->
+  <div class="modal-back" id="detailmodal" hidden>
+    <div class="card modal" id="detailcard">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <h3 id="detail-title" style="margin:0">Detalle de la pregunta</h3>
+        <button class="btn" type="button" id="detail-close" title="Cerrar">✕</button>
+      </div>
+      <p class="secondary" id="detail-question" style="margin:0"></p>
+      <p class="muted" id="detail-correct" style="margin:0"></p>
+      <div class="dist" id="detail-dist"></div>
+      <div class="detail-groups" id="detail-groups"></div>
+      <div class="detail-sorteo">
+        <span class="muted" style="font-size:0.82rem">🎲 Sortear una persona de un grupo (para preguntarle en público, se muestra en la pantalla):</span>
+        <div class="a-controls" id="detail-sorteo-btns"></div>
+      </div>
+      <div class="a-controls" style="justify-content:flex-end">
+        <button class="btn btn-primary" type="button" id="detail-project">📺 Proyectar resultados</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "quiz-vrm-cnsc",
+  "version": "1.0.0",
+  "description": "Aplicación de quiz en tiempo real para la capacitación de VRM y VA (CNSC): preguntas activadas por un supervisor, ingreso por código QR, ranking en vivo, caritas de desempeño y sorteo aleatorio.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "demo": "node scripts/demo.js",
+    "smoke": "node scripts/smoke-test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.1"
+  }
+}
